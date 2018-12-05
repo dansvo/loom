@@ -9,6 +9,8 @@ import Diagrams.Backend.SVG
 import Data.Colour.Palette.RandomColor
 import Data.Colour.Palette.Types
 import System.Random
+import System.Environment (getArgs)
+import qualified System.FilePath.Posix as SFP
 import Control.Monad.Random
 import Control.Monad.State.Lazy
 import Test.QuickCheck as QC (Gen, generate, elements, vectorOf, infiniteListOf)
@@ -162,8 +164,9 @@ boring_rug2 = replicate 126 $ replicate 58 RightTwist
 
 main :: IO ()
 main = do
+  outpath:_ <- getArgs
   wefts <- twoRandomWefts
   r2 <- random5rugs
-  renderSVG "/mnt/c/Users/dansv/Desktop/test.svg" (mkSizeSpec2D (Just 3500) (Just 2200)) r2
-  --renderSVG "/mnt/c/Users/dansv/Desktop/test.svg" (mkSizeSpec2D (Just 3500) (Just 2200)) ((weft_palette (take 100 weft1)) === (weft_palette (take 100 weft2)) )
-  --renderSVG "/mnt/c/Users/dansv/Desktop/test2.svg" (mkSizeSpec2D (Just 300) (Just 220)) $ out_diagram
+  renderSVG (outpath SFP.</> "test1.svg") (mkSizeSpec2D (Just 3000) (Just 2000)) r2
+  renderSVG (outpath SFP.</> "test2.svg") (mkSizeSpec2D (Just 3000) (Just 2000)) ((weft_palette (take 100 (fst <$> wefts))) === (weft_palette (take 100 (snd <$> wefts))) )
+  renderSVG (outpath SFP.</> "test3.svg") (mkSizeSpec2D (Just 3000) (Just 2000)) $ out_diagram
